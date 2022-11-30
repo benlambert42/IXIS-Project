@@ -11,7 +11,7 @@ seshData <- read_csv("IXIS/DataAnalyst_Ecom_data_sessionCounts.csv")
 glimpse(addsToCart)
 glimpse(seshData)
 
-# Check top and bottom of data sets to make check if it looks as it should
+# Check top and bottom of data sets to make check it looks as it should
 head(addsToCart)
 head(seshData)
 tail(addsToCart)
@@ -70,7 +70,7 @@ percentChangeAtc_12to13 <-rbind(aveAddsToCart2012,aveAddsToCart2013) %>%
   mutate(atc_perc = 100*(mean_atc - lag(mean_atc))/lag(mean_atc))
 percentChangeAtc_12to13
 
-# Start testing out plots
+# Start exploring data with plots
 linePlot <- function(df,x,y) {
   df %>%
     ggplot(aes({{x}},{{y}})) + 
@@ -104,7 +104,7 @@ scatPlot(seshData_month, month, sum_qty)
 scatPlot(addsToCart_date, date, addsToCart)
 
 # This time we see a clear positive trend line 
-# In addition to breaking out by month it may be useful to further break out by device
+# In addition to breaking out by month it may be useful to further break out by device categories
 seshData_mthDev <- seshData_date %>%
   group_by(month = floor_date(date, "month"), dim_deviceCategory) %>%
   summarize(sum_ses = sum(sessions),
@@ -123,11 +123,11 @@ scatPlot_dev(seshData_mthDev, month, sum_tra)
 scatPlot_dev(seshData_mthDev, month, sum_qty)
 
 # With the latest plots we are still seeing the positive trendline starting at 
-# the beginning of 2013, but we are also seeing the rate of change of the 
-# different device categories are quite different with desktop having the 
+# the beginning of 2013, but we're also seeing the rate of change of the 
+# different device categories are quite different, with desktop having the 
 # fastest rate of change
 
-##### Start of creating xlsx
+# Create xlsx workbook
 # Sheet 1 Month*Device aggregation of Session, Transactions, QTY, ECR
 MonthDevice_Agg <- seshData_mthDev %>%
   mutate(ECR = sum_tra/sum_ses)
@@ -160,7 +160,7 @@ MoM_compare <- seshData_month %>%
          ECR_Perc_MoM = 100*(ecr - lag(ecr))/lag(ecr))
 MoM_compare
 
-# Create xlsx for export of tables
+# Create xlsx to export tables
 Ecom_RefTables <- createWorkbook()
 addWorksheet(Ecom_RefTables, "Month by Device Aggregation")
 addWorksheet(Ecom_RefTables, "Month by Month Comparison")
